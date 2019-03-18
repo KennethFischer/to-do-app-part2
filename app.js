@@ -1,44 +1,58 @@
 function onReady() {
-   const toDos = [];
-     const addToDoForm = document.getElementById('addToDoForm');
-   function createNewToDo() {
-      const newToDoText = document.getElementById('newToDoText');
-      if (!newToDoText.value) { return; }
-      toDos.push({
-       title: newToDoText.value,
-       complete: false
+  var toDos = [];
+  var addToDoForm = document.getElementById('addToDoForm');
+
+  function createNewToDo() {
+    var newToDoText = document.getElementById('newToDoText');
+
+    toDos.push({
+      title: newToDoText.value,
+      complete: false
     });
     newToDoText.value = '';
-    renderTheUI();
 
+    renderTheUI(toDos);
   }
-    function renderTheUI() {
-     const toDoList = document.getElementById('toDoList');
-         toDoList.textContent = '';
 
-         toDos.forEach(function(toDo) {
-      const newLi = document.createElement('li');
-      const checkbox = document.createElement('input');
-      checkbox.type = "checkbox";
-      newLi.textContent = toDo.title;
-      toDoList.appendChild(newLi);
-      newLi.appendChild(checkbox);
+  function deleteTodo(toDo) {
+    toDos = toDos.filter( (todo) => {
+      return todo != toDo;
     });
-
-
+    renderTheUI(toDos);
   }
 
-  addToDoForm.addEventListener('submit', event => {
+  function renderTheUI(toDos) {
+    var todoList = document.getElementById('toDoList');
+
+    toDoList.innerHTML = '';
+
+    toDos.forEach( (toDo) => {
+      var newLi = document.createElement('li');
+      var checkbox = document.createElement('input');
+      checkbox.type = "checkbox";
+      var deleteBtn = document.createElement('button');
+      deleteBtn.textContent = "delete";
+
+      newLi.innerHTML = toDo.title;
+
+      todoList.appendChild(newLi);
+      newLi.appendChild(checkbox);
+      newLi.appendChild(deleteBtn);
+
+      deleteBtn.addEventListener('click', () => {
+        deleteTodo(toDo);
+      });
+    });
+  }
+
+  addToDoForm.addEventListener('submit', (event) => {
     event.preventDefault();
     createNewToDo();
   });
-  
-    renderTheUI();
 
+  renderTheUI(toDos);
 }
 
-
- window.onload = function() {
-   onReady();
-   
- };
+window.onload = function() {
+  onReady();
+};
